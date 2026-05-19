@@ -29,8 +29,11 @@ rag_chain = init_rag()
 # ----------------------------
 # UI CONFIG
 # ----------------------------
-st.set_page_config(page_title="RAG Chatbot", layout="centered")
-st.title("📚 Textbook RAG Chatbot")
+st.set_page_config(
+    page_title="EduMind The AI Tutor",
+    layout="centered"
+)
+st.title("🧠 Shivam's AI Learning Assistant")
 
 # ----------------------------
 # SESSION STATE
