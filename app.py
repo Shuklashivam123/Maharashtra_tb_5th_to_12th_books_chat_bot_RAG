@@ -3,36 +3,74 @@ from src.vector_store import connect_pinecone
 from src.rag_chain import create_rag_chain
 
 from dotenv import load_dotenv
+import streamlit as st
 
 load_dotenv()
 
-embeddings = download_embeddings()
+# ----------------------------
+# CACHE: heavy objects only
+# ----------------------------
+@st.cache_resource(show_spinner="Initializing RAG system...")
+def init_rag():
+    embeddings = download_embeddings()
 
-vectorstore = connect_pinecone(
-    "textbookbot",
-    embeddings
-)
+    vectorstore = connect_pinecone("textbookbot", embeddings)
 
-retriever = vectorstore.as_retriever(
-    search_type="mmr",
-    search_kwargs={
-        "k": 10,
-        "fetch_k": 40
-    }
-)
+    retriever = vectorstore.as_retriever(
+        search_type="mmr",
+        search_kwargs={"k": 6, "fetch_k": 30}  # optimized
+    )
 
-rag_chain = create_rag_chain(retriever)
+    return create_rag_chain(retriever)
 
-while True:
 
-    question = input("Ask Question: ")
+rag_chain = init_rag()
 
-    if question == "exit":
-        break
+# ----------------------------
+# UI CONFIG
+# ----------------------------
+st.set_page_config(page_title="RAG Chatbot", layout="centered")
+st.title("📚 Textbook RAG Chatbot")
 
-    response = rag_chain.invoke({
-        "input": question
-    })
+# ----------------------------
+# SESSION STATE
+# ----------------------------
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-    print("\nANSWER:\n")
-    print(response["answer"])
+# render history
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
+
+# ----------------------------
+# INPUT
+# ----------------------------
+question = st.chat_input("Ask your question...")
+
+if question:
+    # user message
+    st.session_state.messages.append({"role": "user", "content": question})
+    with st.chat_message("user"):
+        st.markdown(question)
+
+    # spinner during LLM call
+    with st.spinner("Thinking..."):
+        response = rag_chain.invoke({"input": question})
+        answer = response.get("answer", "No response generated.")
+
+    # assistant message
+    st.session_state.messages.append({"role": "assistant", "content": answer})
+    with st.chat_message("assistant"):
+        st.markdown(answer)
+
+
+# 🔥 Important changes (samajh le)
+# ❌ Remove in Streamlit:
+# while True
+# input()
+# print()
+# ✅ Replace with:
+# st.chat_input()
+# st.chat_message()
+# st.session_state
