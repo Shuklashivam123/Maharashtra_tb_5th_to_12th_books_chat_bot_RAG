@@ -16,6 +16,15 @@ st.set_page_config(
 )
 st.title("🧠 Shivam's AI Learning Assistant")
 
+st.caption(
+    "Ask questions from Maharashtra State Board textbooks "
+    "(Classes 6th to 12th)"
+
+   """ ✨ Instant answers  
+    🧠 AI-powered learning  
+    📖 Based on textbook content"""
+)
+
 # ----------------------------
 # CACHE: heavy objects only
 # ----------------------------
@@ -49,14 +58,7 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 
-st.caption(
-    "Ask questions from Maharashtra State Board textbooks "
-    "(Classes 6th to 12th)"
 
-   """ ✨ Instant answers  
-    🧠 AI-powered learning  
-    📖 Based on textbook content"""
-)
 
 # show only once
 if len(st.session_state.get("messages", [])) == 0:
