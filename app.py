@@ -8,6 +8,15 @@ import streamlit as st
 load_dotenv()
 
 # ----------------------------
+# UI CONFIG
+# ----------------------------
+st.set_page_config(
+    page_title="EduMind The AI Tutor",
+    layout="centered"
+)
+st.title("🧠 Shivam's AI Learning Assistant")
+
+# ----------------------------
 # CACHE: heavy objects only
 # ----------------------------
 @st.cache_resource(show_spinner="Initializing RAG system...")
@@ -26,14 +35,7 @@ def init_rag():
 
 rag_chain = init_rag()
 
-# ----------------------------
-# UI CONFIG
-# ----------------------------
-st.set_page_config(
-    page_title="EduMind The AI Tutor",
-    layout="centered"
-)
-st.title("🧠 Shivam's AI Learning Assistant")
+
 
 # ----------------------------
 # SESSION STATE
