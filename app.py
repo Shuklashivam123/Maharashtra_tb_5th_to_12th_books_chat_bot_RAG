@@ -46,6 +46,21 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
+
+st.caption(
+    "Ask questions from Maharashtra State Board textbooks "
+    "(Classes 6th to 12th)"
+
+   """ ✨ Instant answers  
+    🧠 AI-powered learning  
+    📖 Based on textbook content"""
+)
+
+# show only once
+if len(st.session_state.get("messages", [])) == 0:
+    st.info("📚 AI-powered textbook learning assistant")
+    st.success("AI Tutor is Ready 🚀")
+
 # ----------------------------
 # INPUT
 # ----------------------------
